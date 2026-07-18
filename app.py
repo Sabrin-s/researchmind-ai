@@ -1,21 +1,22 @@
 import gradio as gr
-from backend.api import app as fastapi_app
+import os
+import sys
 
-# Mount FastAPI inside Gradio — this is the standard pattern for
-# running FastAPI on Hugging Face Spaces (Gradio SDK) for free.
-app = gr.mount_gradio_app(
-    gr.Blocks(),
-    fastapi_app,
-    path="/api"
-)
+# Ensure the app directory is in the Python path
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+# Set demo mode for HF Spaces
+os.environ["DEMO_MODE"] = "true"
+
+from backend.api import app as fastapi_app
 
 # Simple Gradio UI that shows API info
 with gr.Blocks(title="ResearchMind API") as demo:
     gr.Markdown("""
     # 🧠 ResearchMind — Multi-Agent AI Research Assistant API
-    
-    **This is the backend API server.**
-    
+
+    **This is the backend API server running on Hugging Face Spaces.**
+
     ### Endpoints:
     - `POST /api/projects` — Create a new research project
     - `GET /api/projects` — List all projects
@@ -23,11 +24,12 @@ with gr.Blocks(title="ResearchMind API") as demo:
     - `GET /api/projects/{id}/logs/stream` — Real-time agent logs (SSE)
     - `POST /api/projects/{id}/qa` — Ask questions about the report
     - `GET /api/reports/{id}/download/{format}` — Download PDF/DOCX/MD
-    
+
     ### Documentation:
-    Visit `/api/docs` for interactive Swagger documentation.
+    Visit the `/api/docs` path for interactive Swagger documentation.
     """)
 
+# Mount FastAPI under /api
 app = gr.mount_gradio_app(demo, fastapi_app, path="/api")
 
 if __name__ == "__main__":
