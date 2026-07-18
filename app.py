@@ -1,14 +1,33 @@
 import os
 import sys
 
-# Ensure correct path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-
-# Set demo mode
 os.environ["DEMO_MODE"] = "true"
 
+import gradio as gr
+from backend.api import app as fastapi_app
 import uvicorn
-from backend.api import app
+
+# Minimal Gradio UI — required so HF Spaces health check passes
+with gr.Blocks(title="ResearchMind Backend API") as demo:
+    gr.Markdown("""
+    # 🧠 ResearchMind — Multi-Agent AI Research Assistant
+    **Backend API is running successfully.**
+
+    ### Available API Endpoints:
+    - `GET  /`                             — Health check
+    - `POST /projects`                     — Start new research
+    - `GET  /projects`                     — List all projects  
+    - `GET  /projects/{id}`                — Get project + report
+    - `GET  /projects/{id}/logs/stream`    — Live agent logs (SSE)
+    - `POST /projects/{id}/qa`             — Ask about the report
+    - `GET  /reports/{id}/download/{fmt}`  — Download PDF/DOCX/MD
+    - `GET  /docs`                         — Swagger API docs
+    """)
+
+# Mount Gradio at root so HF health check /info exists
+# All our FastAPI routes (/projects, /reports, etc.) remain intact
+app = gr.mount_gradio_app(fastapi_app, demo, path="/")
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 7860))
