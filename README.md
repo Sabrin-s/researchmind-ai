@@ -1,4 +1,16 @@
+---
+title: ResearchMind Backend
+emoji: 🧠
+colorFrom: indigo
+colorTo: purple
+sdk: gradio
+sdk_version: 4.12.0
+app_file: app.py
+pinned: false
+---
+
 # ResearchMind: Multi-Agent AI Research Assistant
+
 
 ResearchMind is an autonomous multi-agent research assistant designed to search, analyze, verify, and write structured research reports on any given topic.
 
