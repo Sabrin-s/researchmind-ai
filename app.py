@@ -5,20 +5,14 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 os.environ["DEMO_MODE"] = "true"
 
 import gradio as gr
+import spaces
 from backend.api import app as fastapi_app
 import uvicorn
-
-try:
-    import spaces
-except ImportError:
-    class MockSpaces:
-        def GPU(self, f):
-            return f
-    spaces = MockSpaces()
 
 @spaces.GPU
 def dummy_gpu_func():
     return "GPU Active"
+
 
 
 # Minimal Gradio UI — required so HF Spaces health check passes
