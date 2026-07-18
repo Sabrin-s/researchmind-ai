@@ -10,11 +10,16 @@ import uvicorn
 
 try:
     import spaces
-    @spaces.GPU
-    def dummy_gpu_func():
-        return "GPU Active"
 except ImportError:
-    pass
+    class MockSpaces:
+        def GPU(self, f):
+            return f
+    spaces = MockSpaces()
+
+@spaces.GPU
+def dummy_gpu_func():
+    return "GPU Active"
+
 
 # Minimal Gradio UI — required so HF Spaces health check passes
 with gr.Blocks(title="ResearchMind Backend API") as demo:
