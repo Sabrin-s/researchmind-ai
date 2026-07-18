@@ -8,6 +8,14 @@ import gradio as gr
 from backend.api import app as fastapi_app
 import uvicorn
 
+try:
+    import spaces
+    @spaces.GPU
+    def dummy_gpu_func():
+        return "GPU Active"
+except ImportError:
+    pass
+
 # Minimal Gradio UI — required so HF Spaces health check passes
 with gr.Blocks(title="ResearchMind Backend API") as demo:
     gr.Markdown("""
